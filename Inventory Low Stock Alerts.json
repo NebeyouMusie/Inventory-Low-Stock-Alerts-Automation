@@ -1,0 +1,163 @@
+{
+  "name": "Inventory Low Stock Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "41dc22f5-5867-45c2-8ec5-f16fa2be6702",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "198gV8mx3BnZZxm8YSeJfQPvBeg7OuON1XdyJA9sMWm8",
+          "mode": "list",
+          "cachedResultName": "Inventory Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/198gV8mx3BnZZxm8YSeJfQPvBeg7OuON1XdyJA9sMWm8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 328667228,
+          "mode": "list",
+          "cachedResultName": "Inventory Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/198gV8mx3BnZZxm8YSeJfQPvBeg7OuON1XdyJA9sMWm8/edit#gid=328667228"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "f4fdbd7d-9c8a-4be3-a8c1-732cbd99e571",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "puIDvD1AGruBiW0E",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5e5e7e51-3897-4f9f-9ee7-5e1882e7dc68",
+              "leftValue": "={{ $json['Current Stock'] }}",
+              "rightValue": "={{ $json['Low Stock Threshold'] }}",
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "2949407e-e1df-4097-b8b0-8572f0a1c065",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "nebeyoumusie@gmail.com",
+        "subject": "=Low Stock Alert - {{ $json['Product Name'] }} ({{ $json.Variant }}) Inventory Running Low",
+        "emailType": "text",
+        "message": "=Hello Team,\n\nThis is an automated alert to notify you that the inventory for the following product is running low:\n\n    - Product ID: {{ $json['Product ID'] }}\n    - Product Name: {{ $json['Product Name'] }}\n    - Variant: {{ $json.Variant }}\n    - Current Stock: {{ $json['Current Stock'] }}\n    - Low Stock Threshold: {{ $json['Low Stock Threshold'] }}\n\nPlease review and restock the item promptly to avoid stockouts and lost sales.\n\nThank you,\nInventory Management System",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        672,
+        -16
+      ],
+      "id": "54fed7b3-20a3-4e0e-837c-c6c695f9ccd0",
+      "name": "Send a message",
+      "webhookId": "ec35de03-cdbb-47e7-beae-75d27e8c401c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "sGGs6j9IqZ5eRl4L",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fe9d04aa-7a19-470a-87ca-3507f8814558",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "840154ca8ff3822257170e4b1910defa5b76a2ee2e5b52ef94b6628e655db31a"
+  },
+  "id": "cPRdF2XL4pchx6lc",
+  "tags": []
+}
