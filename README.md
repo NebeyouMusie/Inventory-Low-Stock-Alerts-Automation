@@ -1,6 +1,6 @@
 # Inventory Low Stock Alerts Automation with n8n
 
-Automate your inventory monitoring with n8n! This project continuously checks product stock levels in Google Sheets and sends alert emails when items fall at or below a defined threshold.
+Automate your inventory monitoring with n8n! This project continuously checks product stock levels in Google Sheets and sends alert emails when items fall below a defined threshold.
 
 ![Inventory Low Stock Alerts Cover](./images/Inventory%20Low%20Stock%20Alerts%20Automation%20Cover.png)
 
